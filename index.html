@@ -226,6 +226,220 @@
     font-size: 1rem;
   }
 
+  /* POETRY SEARCH SECTION */
+  .poetry-section {
+    padding: 5rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .poetry-search-wrap {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .poetry-search-wrap input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.9rem 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    background: var(--cream);
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    color: var(--ink);
+    outline: none;
+    transition: box-shadow 0.3s;
+  }
+
+  .poetry-search-wrap input:focus {
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.2);
+    border-color: var(--rust);
+  }
+
+  .poetry-search-wrap button {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.8rem;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--parchment);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .poetry-search-wrap button:hover { background: var(--rust); border-color: var(--rust); }
+
+  .poetry-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .poetry-tab {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--mist);
+    background: transparent;
+    color: var(--slate);
+    cursor: pointer;
+    border-radius: 1px;
+    transition: all 0.2s;
+  }
+
+  .poetry-tab.active, .poetry-tab:hover {
+    background: var(--ink);
+    color: var(--parchment);
+    border-color: var(--ink);
+  }
+
+  .poetry-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .poetry-card {
+    background: var(--cream);
+    border: 1px solid var(--mist);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .poetry-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .poetry-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px var(--shadow); }
+  .poetry-card:hover::before { transform: scaleX(1); }
+
+  .poetry-card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+  }
+
+  .poetry-card-author {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .poetry-card-preview {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #7a6d5a;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .poetry-loading {
+    text-align: center;
+    padding: 3rem;
+    font-style: italic;
+    color: #a89070;
+    font-size: 1rem;
+  }
+
+  /* POEM MODAL */
+  .poem-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,8,0.75);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .poem-modal-overlay.open { display: flex; }
+
+  .poem-modal {
+    background: var(--cream);
+    max-width: 640px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 2px;
+    border: 1px solid var(--gold);
+    position: relative;
+  }
+
+  .poem-modal-header {
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--mist);
+    position: sticky;
+    top: 0;
+    background: var(--cream);
+    z-index: 1;
+  }
+
+  .poem-modal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.04em;
+  }
+
+  .poem-modal-author {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .poem-modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--slate);
+    line-height: 1;
+  }
+
+  .poem-modal-body {
+    padding: 1.5rem 2rem 2rem;
+    font-size: 1rem;
+    line-height: 2;
+    font-style: italic;
+    font-weight: 300;
+    color: #3a2e1e;
+    white-space: pre-wrap;
+  }
+
   /* SECTION DIVIDER */
   .divider {
     display: flex;
@@ -1232,6 +1446,37 @@
   </div>
 </section>
 
+<!-- POETRY SEARCH -->
+<section class="poetry-section reveal" id="poetry">
+  <p class="section-eyebrow">Feature 06</p>
+  <h2 class="section-title">Poetry Library</h2>
+  <p class="section-desc">Search thousands of real poems by title or author. Click any poem to read the full text.</p>
+
+  <div class="poetry-tabs">
+    <button class="poetry-tab active" data-mode="title">Search by Title</button>
+    <button class="poetry-tab" data-mode="author">Search by Author</button>
+  </div>
+
+  <div class="poetry-search-wrap">
+    <input type="text" id="poetryInput" placeholder="e.g. Ozymandias, or Keats…" />
+    <button id="poetrySearchBtn">Search</button>
+  </div>
+
+  <div id="poetryResults"></div>
+</section>
+
+<!-- POEM MODAL -->
+<div class="poem-modal-overlay" id="poemModal">
+  <div class="poem-modal">
+    <div class="poem-modal-header">
+      <div class="poem-modal-title" id="modalTitle"></div>
+      <div class="poem-modal-author" id="modalAuthor"></div>
+      <button class="poem-modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="poem-modal-body" id="modalBody"></div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">The Intertextual Map</div>
@@ -1723,7 +1968,67 @@ document.getElementById('searchInput').addEventListener('input', e => renderSear
 document.getElementById('searchBtn').addEventListener('click', () => renderSearchResults(document.getElementById('searchInput').value));
 document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') renderSearchResults(e.target.value); });
 
+// ─── POETRY SEARCH (PoetryDB API) ────────────────────────────────────────
 
-</script>
+let poetryMode = 'title';
+
+document.querySelectorAll('.poetry-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.poetry-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    poetryMode = tab.dataset.mode;
+    document.getElementById('poetryInput').placeholder =
+      poetryMode === 'title' ? 'e.g. Ozymandias, The Raven…' : 'e.g. Keats, Emily Dickinson…';
+  });
+});
+
+async function searchPoetry() {
+  const query = document.getElementById('poetryInput').value.trim();
+  if (!query) return;
+  const resultsEl = document.getElementById('poetryResults');
+  resultsEl.innerHTML = '<div class="poetry-loading">Searching the archive…</div>';
+
+  try {
+    const endpoint = poetryMode === 'title'
+      ? `https://poetrydb.org/title/${encodeURIComponent(query)}`
+      : `https://poetrydb.org/author/${encodeURIComponent(query)}`;
+
+    const res = await fetch(endpoint);
+    const data = await res.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      resultsEl.innerHTML = '<div class="poetry-loading">No poems found. Try another title or author.</div>';
+      return;
+    }
+
+    const poems = data.slice(0, 12);
+    resultsEl.innerHTML = `<div class="poetry-results-grid">${poems.map((p, i) => `
+      <div class="poetry-card" onclick="openPoem(${i})">
+        <div class="poetry-card-title">${p.title}</div>
+        <div class="poetry-card-author">${p.author}</div>
+        <div class="poetry-card-preview">${p.lines.slice(0, 3).join('<br>')}…</div>
+      </div>
+    `).join('')}</div>`;
+
+    window._currentPoems = poems;
+  } catch (e) {
+    resultsEl.innerHTML = '<div class="poetry-loading">Could not connect to poetry archive. Check your connection.</div>';
+  }
+}
+
+function openPoem(index) {
+  const p = window._currentPoems[index];
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalAuthor').textContent = p.author;
+  document.getElementById('modalBody').textContent = p.lines.join('\n');
+  document.getElementById('poemModal').classList.add('open');
+}
+
+document.getElementById('poetrySearchBtn').addEventListener('click', searchPoetry);
+document.getElementById('poetryInput').addEventListener('keydown', e => { if (e.key === 'Enter') searchPoetry(); });
+document.getElementById('modalClose').addEventListener('click', () => document.getElementById('poemModal').classList.remove('open'));
+document.getElementById('poemModal').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+initAllusionRadar();</script>
 </body>
 </html>
