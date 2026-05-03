@@ -169,6 +169,63 @@
     font-size: 1.2rem;
   }
 
+  /* SEARCH RESULTS */
+  .search-results {
+    max-width: 640px;
+    margin: 1rem auto 0;
+    display: none;
+  }
+
+  .search-results.visible { display: block; }
+
+  .search-result-item {
+    background: var(--cream);
+    border: 1px solid var(--mist);
+    border-left: 3px solid var(--gold);
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    border-radius: 1px;
+  }
+
+  .search-result-item:hover {
+    border-left-color: var(--rust);
+    background: var(--parchment);
+  }
+
+  .result-type {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .result-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+
+  .result-preview {
+    font-size: 0.88rem;
+    color: #7a6d5a;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .search-no-results {
+    text-align: center;
+    padding: 1.5rem;
+    font-style: italic;
+    color: #a89070;
+    font-size: 1rem;
+  }
+
   /* SECTION DIVIDER */
   .divider {
     display: flex;
@@ -972,9 +1029,10 @@
   <h1>Literature is a<br><em>conversation</em> across centuries.</h1>
   <p>The Intertextual Map traces the invisible threads between texts — allusions, influences, echoes — building a living family tree of the written word.</p>
   <div class="search-wrap">
-    <input type="text" placeholder="Search a text, author, theme, or term…" />
-    <button>⌕</button>
+    <input type="text" id="searchInput" placeholder="Search a text, author, theme, or term…" />
+    <button id="searchBtn">⌕</button>
   </div>
+  <div class="search-results" id="searchResults"></div>
 </section>
 
 <!-- FEATURES -->
@@ -1563,9 +1621,109 @@ const observer = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
+// ─── SEARCH ───────────────────────────────────────────────────────────────
 
-initAllusionRadar();
+const searchIndex = [
+  // Allusion Radar entries
+  { type: 'Allusion Radar', title: 'T.S. Eliot — The Waste Land', keywords: ['eliot', 'waste land', 'poem', 'modernism', 'allusion'], section: '#allusion', detail: 'Explore all the myths and texts Eliot referenced in The Waste Land.' },
+  { type: 'Allusion Radar', title: 'Dante — Inferno', keywords: ['dante', 'inferno', 'divine comedy', 'hell', 'italian'], section: '#allusion', detail: 'Dante\'s vision of the Inferno, referenced in The Waste Land.' },
+  { type: 'Allusion Radar', title: 'Chaucer — Canterbury Tales', keywords: ['chaucer', 'canterbury', 'medieval', 'english', 'tales'], section: '#allusion', detail: 'Chaucer\'s April opening, inverted by Eliot.' },
+  { type: 'Allusion Radar', title: 'Wagner — Tristan und Isolde', keywords: ['wagner', 'tristan', 'isolde', 'opera', 'german', 'music'], section: '#allusion', detail: 'Wagner\'s opera of longing and death.' },
+  { type: 'Allusion Radar', title: 'Ovid — Metamorphoses', keywords: ['ovid', 'metamorphoses', 'philomela', 'myth', 'roman', 'latin'], section: '#allusion', detail: 'Ovid\'s myths of transformation referenced by Eliot.' },
+  { type: 'Allusion Radar', title: 'Shakespeare — The Tempest', keywords: ['shakespeare', 'tempest', 'ariel', 'prospero', 'play'], section: '#allusion', detail: 'Ariel\'s song from The Tempest echoes through The Waste Land.' },
+  { type: 'Allusion Radar', title: 'Bible — Book of Ezekiel', keywords: ['bible', 'ezekiel', 'biblical', 'desert', 'religion', 'scripture'], section: '#allusion', detail: 'Ezekiel\'s desert visions and broken images.' },
+
+  // Translation Slider
+  { type: 'Translation Slider', title: 'Homer — The Iliad', keywords: ['homer', 'iliad', 'achilles', 'greek', 'epic', 'troy', 'war', 'translation'], section: '#translation', detail: 'Compare Chapman, Pope, Lattimore, and Fagles on the Iliad.' },
+  { type: 'Translation Slider', title: 'Homer — The Odyssey', keywords: ['homer', 'odyssey', 'odysseus', 'ulysses', 'greek', 'epic', 'translation', 'wilson'], section: '#translation', detail: 'Compare four translations of the Odyssey opening.' },
+  { type: 'Translation Slider', title: 'Dante — Divine Comedy', keywords: ['dante', 'divine comedy', 'commedia', 'italian', 'translation', 'inferno', 'paradise'], section: '#translation', detail: 'Compare translations of Dante\'s opening lines.' },
+
+  // Timeline
+  { type: 'Movement Timeline', title: 'Melancholy', keywords: ['melancholy', 'depression', 'sadness', 'sorrow', 'romantic', 'burton', 'keats', 'spleen'], section: '#timeline', detail: 'How melancholy evolved from medieval humour to modernist fragmentation.' },
+  { type: 'Movement Timeline', title: 'The Sublime', keywords: ['sublime', 'awe', 'terror', 'nature', 'burke', 'kant', 'wordsworth', 'vast', 'mountain'], section: '#timeline', detail: 'From Longinus to Lyotard — the history of the sublime.' },
+  { type: 'Movement Timeline', title: 'The Uncanny', keywords: ['uncanny', 'unheimlich', 'freud', 'gothic', 'strange', 'horror', 'double', 'ghost'], section: '#timeline', detail: 'The uncanny from Gothic fiction to Freud\'s essay and beyond.' },
+  { type: 'Movement Timeline', title: 'Nature in Literature', keywords: ['nature', 'pastoral', 'environment', 'ecology', 'romantic', 'wordsworth', 'virgil', 'climate'], section: '#timeline', detail: 'Nature from Virgilian pastoral to ecocriticism.' },
+
+  // Theory Lab
+  { type: 'Theory Lab', title: 'Hamlet — Feminist Reading', keywords: ['hamlet', 'feminist', 'feminism', 'ophelia', 'gertrude', 'woman', 'gender', 'shakespeare'], section: '#theory', detail: 'Key questions and critical voices for a feminist reading of Hamlet.' },
+  { type: 'Theory Lab', title: 'Hamlet — Marxist Reading', keywords: ['hamlet', 'marxist', 'marxism', 'class', 'power', 'politics', 'shakespeare', 'eagleton'], section: '#theory', detail: 'How Marxist criticism reads power and class in Hamlet.' },
+  { type: 'Theory Lab', title: 'Hamlet — Psychoanalytic Reading', keywords: ['hamlet', 'psychoanalytic', 'freud', 'oedipus', 'lacan', 'psychology', 'unconscious', 'shakespeare'], section: '#theory', detail: 'Freudian and Lacanian approaches to Hamlet.' },
+  { type: 'Theory Lab', title: 'Hamlet — Postcolonial Reading', keywords: ['hamlet', 'postcolonial', 'colonialism', 'empire', 'race', 'sovereignty', 'shakespeare'], section: '#theory', detail: 'Reading Hamlet through postcolonial theory.' },
+  { type: 'Theory Lab', title: 'Hamlet — Ecocritical Reading', keywords: ['hamlet', 'ecocritical', 'ecology', 'environment', 'nature', 'shakespeare', 'green'], section: '#theory', detail: 'Ecocritical perspectives on Hamlet and the natural world.' },
+
+  // Terminology
+  { type: 'Literary Term', title: 'Oxymoron', keywords: ['oxymoron', 'contradiction', 'paradox', 'figure', 'rhetoric', 'sweet sorrow', 'device'], section: '#terms', detail: 'A figure combining contradictory terms — seen in Shakespeare and Plath.' },
+  { type: 'Literary Term', title: 'Anaphora', keywords: ['anaphora', 'repetition', 'rhetoric', 'figure', 'speech', 'churchill', 'eliot', 'device'], section: '#terms', detail: 'Repetition at the start of successive lines or clauses.' },
+  { type: 'Literary Term', title: 'Synecdoche', keywords: ['synecdoche', 'part', 'whole', 'figure', 'rhetoric', 'dylan thomas', 'device', 'metonymy'], section: '#terms', detail: 'When a part stands for the whole — the hand for the person.' },
+  { type: 'Literary Term', title: 'Enjambment', keywords: ['enjambment', 'line break', 'verse', 'poetry', 'keats', 'cummings', 'device', 'run-on'], section: '#terms', detail: 'A sentence continuing across a line break without pause.' },
+  { type: 'Literary Term', title: 'Dramatic Irony', keywords: ['dramatic irony', 'irony', 'audience', 'knowledge', 'shakespeare', 'austen', 'device', 'theatre'], section: '#terms', detail: 'When the audience knows what the character does not.' },
+];
+
+function doSearch(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) return [];
+  return searchIndex.filter(item =>
+    item.keywords.some(k => k.includes(q)) ||
+    item.title.toLowerCase().includes(q) ||
+    item.type.toLowerCase().includes(q)
+  );
+}
+
+function renderSearchResults(query) {
+  const resultsEl = document.getElementById('searchResults');
+  if (!query.trim()) {
+    resultsEl.classList.remove('visible');
+    return;
+  }
+  const results = doSearch(query);
+  resultsEl.classList.add('visible');
+  if (results.length === 0) {
+    resultsEl.innerHTML = `<div class="search-no-results">No results found for "<em>${query}</em>" — try another term.</div>`;
+    return;
+  }
+  resultsEl.innerHTML = results.map(r => `
+    <div class="search-result-item" onclick="goToResult('${r.section}', '${r.type}', '${r.title}')">
+      <div class="result-type">${r.type}</div>
+      <div class="result-title">${r.title}</div>
+      <div class="result-preview">${r.detail}</div>
+    </div>
+  `).join('');
+}
+
+function goToResult(section, type, title) {
+  document.getElementById('searchResults').classList.remove('visible');
+  document.getElementById('searchInput').value = '';
+  document.querySelector(section).scrollIntoView({ behavior: 'smooth' });
+
+  // Auto-activate the right tab
+  setTimeout(() => {
+    if (type === 'Movement Timeline') {
+      const map = { 'Melancholy': 'melancholy', 'The Sublime': 'sublime', 'The Uncanny': 'uncanny', 'Nature in Literature': 'nature' };
+      const btn = document.querySelector(`.theme-btn[data-theme="${map[title]}"]`);
+      if (btn) { btn.click(); }
+    } else if (type === 'Theory Lab') {
+      const map = { 'Hamlet — Feminist Reading': 'feminist', 'Hamlet — Marxist Reading': 'marxist', 'Hamlet — Psychoanalytic Reading': 'psychoanalytic', 'Hamlet — Postcolonial Reading': 'postcolonial', 'Hamlet — Ecocritical Reading': 'ecocritical' };
+      const btn = document.querySelector(`.lens-btn[data-lens="${map[title]}"]`);
+      if (btn) { btn.click(); }
+    } else if (type === 'Translation Slider') {
+      const map = { 'Homer — The Iliad': 'iliad1', 'Homer — The Odyssey': 'odyssey1', 'Dante — Divine Comedy': 'divine' };
+      const btn = document.querySelector(`.trans-btn[data-passage="${map[title]}"]`);
+      if (btn) { btn.click(); }
+    } else if (type === 'Literary Term') {
+      const idx = termData.findIndex(t => t.term === title);
+      if (idx >= 0) {
+        const items = document.querySelectorAll('.term-item');
+        if (items[idx]) { items[idx].click(); }
+      }
+    }
+  }, 800);
+}
+
+document.getElementById('searchInput').addEventListener('input', e => renderSearchResults(e.target.value));
+document.getElementById('searchBtn').addEventListener('click', () => renderSearchResults(document.getElementById('searchInput').value));
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') renderSearchResults(e.target.value); });
+
+
 </script>
 </body>
 </html>
